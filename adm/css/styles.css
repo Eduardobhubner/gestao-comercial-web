@@ -1,0 +1,163 @@
+body {
+    width: 100vh;
+    height: 100vh;
+    background-color: #fff;
+}
+
+/* Barra de navegação */
+
+header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+}
+
+header, .navbar {
+    background-color: #68D98E;
+    display: flex;
+    justify-content: space-between;
+    /*igualmente espaçado um do outro */
+    align-items: center;
+    margin: 0 auto;
+    padding: 0px 30px;
+}
+
+.main-title {
+    color: #444;
+    margin: 0 0 65px 0;
+    font-size: 40px;
+    text-align: center;
+}
+
+.main-title::after {
+    content: "";
+    border-top: 2px solid #333;
+    width: 15%;
+    position: absolute;
+    top: 60px;
+    left: 42.5%;
+}
+
+#nav-container {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#logo {
+    width: 160px;
+    height: 80px;
+}
+
+.navbar-brand {
+    margin: 20px;
+    color: #FFF;
+    font-size: 30px;
+}
+
+.navbar-brand::after {
+    content: "";
+    border-top: 2px solid #067830;
+    width: 15%;
+    position: absolute;
+    top: 60px;
+    left: 2%;
+}
+
+.hamburguer {
+    width: 30px;
+    height: 30px;
+    background-color: #067830;
+    border-radius: 10%;
+    position: relative;
+    cursor: pointer;
+    /* display: none; */
+}
+
+.hamburguer:after {
+    content: '';
+    position: absolute;
+    width: 70%;
+    height: 10%;
+    top: 30%;
+    left: 15%;
+    border-radius: 20px;
+    background-color: #fff;
+    transition: 1s ease;
+}
+
+.hamburguer:before {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 10%;
+    top: 60%;
+    left: 35%;
+    border-radius: 20px;
+    background-color: #fff;
+    transition: 1s ease;
+}
+
+#hamburguer:checked~label .hamburguer:after {
+    transform: rotate(225deg);
+    top: 45%;
+    left: 15%;
+}
+
+#hamburguer:checked~label .hamburguer:before {
+    transform: rotate(-405deg);
+    top: 45%;
+    left: 15%;
+    width: 70%;
+    height: 10%;
+}
+
+.navbar-brand:hover {
+    color: #067830;
+}
+
+#navbar-links a {
+    color: #FFF;
+    display: block;
+    /* elemento de caixa */
+    font-size: 20px;
+    padding: 14px 20px;
+    text-decoration: none;
+    transition: 0.5s ease;
+}
+
+#navbar-links a:hover {
+    color: #067830;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding: 1rem .8rem;
+}
+
+main{
+
+    top: 20vh;
+    width: 100%;
+    position: absolute;
+}
+
+/* responsive */
+
+@media screen and (max-width: 980px) {
+    /* geral */
+    .container {
+        padding: 20px 0;
+    }
+    .navbar-nav {
+        align-items: center;
+    }
+    .navbar-brand::after {
+        content: "";
+        border-top: 1px solid #067830;
+        width: 50%;
+        position: absolute;
+        top: 60px;
+        left: 10%;
+    }
+}
