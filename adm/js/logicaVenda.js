@@ -21,7 +21,7 @@ $(document).ready(function () {
     var idQuant = '';
     var idCustoUnit = '';
     var idTotal = '';
-    var idUnid = '';
+    var idPorcen = '';
 
     $('#btn-add-prod-venda').click(function () {
 
@@ -29,14 +29,14 @@ $(document).ready(function () {
         idSelect = "id-select" + count;
         idQuant = "id-quant" + count;
         idCustoUnit = "id-custo" + count;
+        idPorcen = "id-porcen" + count;
         idTotal = "id-total" + count;
-        idUnid = "id-unid" + count;
 
         // desabilita botão 
         $("#btn-add-prod-venda").attr("disabled", true);
 
         // aplica novos campos 
-        $('#body-table-venda').append('<tr id="tr-table-venda' + count + '"><td scope="row"><select class="form-control select-prod-venda" id="' + idSelect + '" name="select-prod-venda[]"><option selected>...</option></select></td><td><input type="text" class="form-control quant-prod-venda" id="' + idQuant + '" name="quant-prod-venda[]"></td><td><input type="text" class="form-control custoUnit-prod-venda" id="' + idCustoUnit + '" name="custoUnit-prod-venda[]"></td><td><input type="text" class="form-control nTotalVal" id="' + idTotal + '" name="nTotalVal[]" disabled></td><td><input type="text" class="form-control" id="' + idUnid + '" name="idUnid" disabled></td><td><button type="button" class="btn btn-danger btn-apagar-prod-venda" id="' + count + '"><i class="fas fa-trash-alt"></i></button></td></tr>');
+        $('#body-table-venda').append('<tr id="tr-table-venda' + count + '"><td scope="row"><select class="form-control select-prod-venda" id="' + idSelect + '" name="select-prod-venda[]"><option selected>...</option></select></td><td><input type="text" class="form-control quant-prod-venda" id="' + idQuant + '" name="quant-prod-venda[]"></td><td><input type="text" class="form-control custoUnit-prod-venda" id="' + idCustoUnit + '" name="custoUnit-prod-venda[]"></td><td><input type="text" class="form-control porcen-prod-venda" id="' + idPorcen + '" name="idPorcen"></td><td><input type="text" class="form-control nTotalVal" id="' + idTotal + '" name="nTotalVal[]" disabled></td><td><button type="button" class="btn btn-danger btn-apagar-prod-venda" id="' + count + '"><i class="fas fa-trash-alt"></i></button></td></tr>');
 
         // desabilita select
         $('#' + idSelect).attr("disabled", true);
@@ -86,13 +86,11 @@ $(document).ready(function () {
                 var valorCompraProd = data.valorCompraProd;
                 // recebe quantidade em estoque do produto
                 var estoqueProd = data.estoqueProd;
-                // recebe tipo de unid do produto
-                var unidMedProd = data.unidMedProd;
 
                 // preenche os inputs 
                 $("#id-custo" + numClear).val(valorCompraProd);
                 $("#id-quant" + numClear).val(estoqueProd);
-                $("#id-unid" + numClear).val(unidMedProd);
+                $("#id-porcen" + numClear).val(Number(0));
 
                 //cria o custo total (estoq X valor)
                 var CustTotal = estoqueProd * valorCompraProd;
@@ -112,9 +110,9 @@ $(document).ready(function () {
     });
 
 
-    $(document.body).on('keyup', '.nTotalVal', function () {
-        somaValorProdTotal();
-    });
+    // $(document.body).on('keyup', '.nTotalVal', function () {
+    //     somaValorProdTotal();
+    // });
 
     // frete
     $(document.body).on('keyup', '#val-embalagem-venda', function () {
@@ -126,7 +124,7 @@ $(document).ready(function () {
         somaValorProdTotal();
     });
 
-    // quando mudar  o valor da quantidade de itens
+    // quando mudar a quantidade de itens
     $(document.body).on('keyup', '.quant-prod-venda', function () {
 
         //recebe valor do id do input
@@ -137,27 +135,62 @@ $(document).ready(function () {
         var valQuant = $(this).val();
         // valor escrito custoUnit
         var valCustoUnit = $("#id-custo" + numClearId).val();
-        // valor total
-        var ValTotalProd = valQuant * valCustoUnit;
+        // valor escrito em porcentagem
+        var valPorcen = $("#id-porcen" + numClearId).val();
+
+        // se for nulo ou  NaN
+        if (!isNaN(valPorcen) && (valPorcen != 0)) {
+            
+            console.log("sendo chamado if");
+
+            console.log("porcen->"+ valPorcen);
+            //lucro = (porcen/valor)*100
+            var l = (valPorcen / valCustoUnit) * 100;
+            console.log("l->"+l);
+            //juntar lucro com valor do produto lf=lucroFinal
+            var lf = l + valCustoUnit;
+            console.log("lf->"+l);
+            // valor em relação a quantidade
+            var valTotalProd = lf * valQuant;
+            console.log("valTotalProd->"+valTotalProd);
+        } else {
+            // valor total sem lucro
+            var valTotalProd = valQuant * valCustoUnit;
+            console.log("sendo chamado else");
+        }
         // aplica no input total
-        $("#id-total" + numClearId).val(ValTotalProd);
+        $("#id-total" + numClearId).val(valTotalProd);
         somaValorProdTotal();
     });
 
-    // quando mudar o valor da quantidade de custoUnid
+    // quando mudar o valor do custoUnid
     $(document.body).on('keyup', '.custoUnit-prod-venda', function () {
         //recebe valor do id do input
         var numIdInput = $(this).attr("id");
         // remove qualquer string deixando apenas o numero 
         var numClearId = numIdInput.replace(/\D+/g, "");
-        // valor escrito quantidade
-        var valCusto = $(this).val();
+        // valor escrito custoUnit 
+        var valCustoUnit = $(this).val();
         // valor escrito Quant
-        var valQuantProd = $("#id-quant" + numClearId).val();
-        // valor total
-        var ValTotalProd = valCusto * valQuantProd;
+        var valQuant = $("#id-quant" + numClearId).val();
+        // valor escrito em porcentagem
+        var valPorcen = $("#id-porcen" + numClearId).val();
+
+        // se for nulo ou  NaN
+        if (isNaN(valPorcen) || (valPorcen = "")) {
+            // valor total sem lucro
+            var valTotalProd = valQuant * valCustoUnit;
+        } else {
+            //lucro = (porcen/valor)*100
+            var l = ((valPorcen / valCustoUnit) * 100);
+            //juntar lucro com valor do produto lf=lucroFinal
+            var lf = l + valCustoUnit;
+            // valor em relação a quantidade
+            var valTotalProd = lf * valQuant;
+        }
+
         // aplica no input total
-        $("#id-total" + numClearId).val(ValTotalProd);
+        $("#id-total" + numClearId).val(valTotalProd);
         somaValorProdTotal();
     });
 
@@ -179,10 +212,12 @@ $(document).ready(function () {
         var valorFrete = Number($("#val-frete-venda").val());
         var valorEmbalagem = Number($("#val-embalagem-venda").val());
 
-        var somaTotalVenda =valorTotalProd + valorFrete + valorEmbalagem;
+        var somaTotalVenda = valorTotalProd + valorFrete + valorEmbalagem;
         $("#inputValorTotalVenda").val(parseFloat(somaTotalVenda.toFixed(2)));
 
     }
+
+    // preenche select de clientes 
     function listaClienteVenda() {
         $('#select-cliente-venda').html('');
         $('#select-cliente-venda').html('<option selected>Selecionar...</option>');
@@ -197,72 +232,85 @@ $(document).ready(function () {
         });
     }
 
-    function aplicaMaskVenda(){
+    function aplicaMaskVenda() {
 
-    // frete
-    $("#val-frete-venda").inputmask('currency', {
-        "autoUnmask": true,
-        radixPoint: ".",
-        groupSeparator: ".",
-        allowMinus: false,
-        prefix: 'R$ ',
-        digits: 2,
-        digitsOptional: false,
-        rightAlign: false,
-        unmaskAsNumber: true
-    });
+        // frete
+        $("#val-frete-venda").inputmask('currency', {
+            "autoUnmask": true,
+            radixPoint: ".",
+            groupSeparator: ".",
+            allowMinus: false,
+            prefix: 'R$ ',
+            digits: 2,
+            digitsOptional: false,
+            rightAlign: false,
+            unmaskAsNumber: true
+        });
 
-    // embalagem
-    $("#val-embalagem-venda").inputmask('currency', {
-        "autoUnmask": true,
-        radixPoint: ".",
-        groupSeparator: ".",
-        allowMinus: false,
-        prefix: 'R$ ',
-        digits: 2,
-        digitsOptional: false,
-        rightAlign: false,
-        unmaskAsNumber: true
-    });
+        // embalagem
+        $("#val-embalagem-venda").inputmask('currency', {
+            "autoUnmask": true,
+            radixPoint: ".",
+            groupSeparator: ".",
+            allowMinus: false,
+            prefix: 'R$ ',
+            digits: 2,
+            digitsOptional: false,
+            rightAlign: false,
+            unmaskAsNumber: true
+        });
 
-    // valor total prod unit
-    $(".nTotalVal").inputmask('currency', {
-        "autoUnmask": true,
-        radixPoint: ".",
-        groupSeparator: ".",
-        allowMinus: false,
-        prefix: 'R$ ',
-        digits: 2,
-        digitsOptional: false,
-        rightAlign: false,
-        unmaskAsNumber: true
-    });
+        // valor total prod todos
+        $("#inputValorTotalProd").inputmask('currency', {
+            "autoUnmask": true,
+            radixPoint: ".",
+            groupSeparator: ".",
+            allowMinus: false,
+            prefix: 'R$ ',
+            digits: 2,
+            digitsOptional: false,
+            rightAlign: false,
+            unmaskAsNumber: true
+        });
 
-    // valor total prod todos
-    $("#inputValorTotalProd").inputmask('currency', {
-        "autoUnmask": true,
-        radixPoint: ".",
-        groupSeparator: ".",
-        allowMinus: false,
-        prefix: 'R$ ',
-        digits: 2,
-        digitsOptional: false,
-        rightAlign: false,
-        unmaskAsNumber: true
-    });
+        // valor total prod unit
+        $(".nTotalVal").inputmask('currency', {
+            "autoUnmask": true,
+            radixPoint: ".",
+            groupSeparator: ".",
+            allowMinus: false,
+            prefix: 'R$ ',
+            digits: 2,
+            digitsOptional: false,
+            rightAlign: false,
+            unmaskAsNumber: true
+        });
 
-    // valor total da compra
-    $("#inputValorTotalVenda").inputmask('currency', {
-        "autoUnmask": true,
-        radixPoint: ".",
-        groupSeparator: ".",
-        allowMinus: false,
-        prefix: 'R$ ',
-        digits: 2,
-        digitsOptional: false,
-        rightAlign: false,
-        unmaskAsNumber: true
-    });
+        // valor total da compra
+        $("#inputValorTotalVenda").inputmask('currency', {
+            "autoUnmask": true,
+            radixPoint: ".",
+            groupSeparator: ".",
+            allowMinus: false,
+            prefix: 'R$ ',
+            digits: 2,
+            digitsOptional: false,
+            rightAlign: false,
+            unmaskAsNumber: true
+        });
+
+        // valor Unitario
+        $(".custoUnit-prod-venda").inputmask('currency', {
+            "autoUnmask": true,
+            radixPoint: ".",
+            groupSeparator: ".",
+            allowMinus: false,
+            prefix: 'R$ ',
+            digits: 2,
+            digitsOptional: false,
+            rightAlign: false,
+            unmaskAsNumber: true
+        });
 
     } //fim da function
 

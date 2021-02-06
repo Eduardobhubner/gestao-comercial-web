@@ -413,9 +413,9 @@ include_once("./php/conexao/conexao.php");
                                                         <tr>
                                                             <th scope="col">Produto</th>
                                                             <th scope="col">Quantidade</th>
-                                                            <th scope="col">Custo Unit</th>
-                                                            <th scope="col">Custo total</th>
-                                                            <th scope="col">Unidade</th>
+                                                            <th scope="col">Valor Unit</th>
+                                                            <th scope="col">Lucro(%)</th>
+                                                            <th scope="col">Valor total</th>
                                                             <th scope="col">Delete</th>
                                                         </tr>
                                                     </thead>
