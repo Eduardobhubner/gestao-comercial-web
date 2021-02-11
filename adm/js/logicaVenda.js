@@ -140,19 +140,20 @@ $(document).ready(function () {
 
         // se for nulo ou  NaN
         if (!isNaN(valPorcen) && (valPorcen != 0)) {
-            
+
             console.log("sendo chamado if");
 
-            console.log("porcen->"+ valPorcen);
-            //lucro = (porcen/valor)*100
-            var l = (valPorcen / valCustoUnit) * 100;
-            console.log("l->"+l);
+            console.log("porcen->" + valPorcen);
+            console.log("Custo unitario->" + valCustoUnit);
+            //lucro = (porcen*valor)/100
+            var l = (valPorcen * valCustoUnit) / 100;
+            console.log("l->" + l);
             //juntar lucro com valor do produto lf=lucroFinal
             var lf = l + valCustoUnit;
-            console.log("lf->"+l);
+            console.log("lf->" + l);
             // valor em relação a quantidade
             var valTotalProd = lf * valQuant;
-            console.log("valTotalProd->"+valTotalProd);
+            console.log("valTotalProd->" + valTotalProd);
         } else {
             // valor total sem lucro
             var valTotalProd = valQuant * valCustoUnit;
@@ -181,8 +182,8 @@ $(document).ready(function () {
             // valor total sem lucro
             var valTotalProd = valQuant * valCustoUnit;
         } else {
-            //lucro = (porcen/valor)*100
-            var l = ((valPorcen / valCustoUnit) * 100);
+            //lucro = (porcen*valor)/100
+            var l = ((valPorcen * valCustoUnit) / 100);
             //juntar lucro com valor do produto lf=lucroFinal
             var lf = l + valCustoUnit;
             // valor em relação a quantidade
