@@ -145,7 +145,7 @@ $(document).ready(function () {
 
             console.log("porcen->"+ valPorcen);
             //lucro = (porcen/valor)*100
-            var l = (valPorcen / valCustoUnit) * 100;
+            var l = (valPorcen * valCustoUnit) / 100;
             console.log("l->"+l);
             //juntar lucro com valor do produto lf=lucroFinal
             var lf = l + valCustoUnit;
