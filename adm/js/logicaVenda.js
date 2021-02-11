@@ -36,7 +36,7 @@ $(document).ready(function () {
         $("#btn-add-prod-venda").attr("disabled", true);
 
         // aplica novos campos 
-        $('#body-table-venda').append('<tr id="tr-table-venda' + count + '"><td scope="row"><select class="form-control select-prod-venda" id="' + idSelect + '" name="select-prod-venda[]"><option selected>...</option></select></td><td><input type="text" class="form-control quant-prod-venda" id="' + idQuant + '" name="quant-prod-venda[]"></td><td><input type="text" class="form-control custoUnit-prod-venda" id="' + idCustoUnit + '" name="custoUnit-prod-venda[]"></td><td><input type="text" class="form-control porcen-prod-venda" id="' + idPorcen + '" name="idPorcen"></td><td><input type="text" class="form-control nTotalVal" id="' + idTotal + '" name="nTotalVal[]" disabled></td><td><button type="button" class="btn btn-danger btn-apagar-prod-venda" id="' + count + '"><i class="fas fa-trash-alt"></i></button></td></tr>');
+        $('#body-table-venda').append('<tr id="tr-table-venda' + count + '"><td scope="row"><select class="form-control select-prod-venda" id="' + idSelect + '" name="select-prod-venda[]"><option selected>...</option></select></td><td><input type="text" class="form-control quant-prod-venda" id="' + idQuant + '" name="quant-prod-venda[]"></td><td><input type="text" class="form-control custoUnit-prod-venda" id="' + idCustoUnit + '" name="custoUnit-prod-venda[]"></td><td><input type="text" class="form-control porcen-prod-venda" id="' + idPorcen + '" name="porcen-prod-venda[]"></td><td><input type="text" class="form-control nTotalVal" id="' + idTotal + '" name="nTotalVal[]" disabled></td><td><button type="button" class="btn btn-danger btn-apagar-prod-venda" id="' + count + '"><i class="fas fa-trash-alt"></i></button></td></tr>');
 
         // desabilita select
         $('#' + idSelect).attr("disabled", true);
@@ -140,24 +140,15 @@ $(document).ready(function () {
 
         // se for nulo ou  NaN
         if (!isNaN(valPorcen) && (valPorcen != 0)) {
-
-            console.log("sendo chamado if");
-
-            console.log("porcen->" + valPorcen);
-            console.log("Custo unitario->" + valCustoUnit);
-            //lucro = (porcen*valor)/100
+            //lucro = (porcen*valor)/100  --liquido
             var l = (valPorcen * valCustoUnit) / 100;
-            console.log("l->" + l);
-            //juntar lucro com valor do produto lf=lucroFinal
+            //juntar lucro + valor do produto lf=lucro bruto
             var lf = l + valCustoUnit;
-            console.log("lf->" + l);
             // valor em relação a quantidade
             var valTotalProd = lf * valQuant;
-            console.log("valTotalProd->" + valTotalProd);
         } else {
             // valor total sem lucro
             var valTotalProd = valQuant * valCustoUnit;
-            console.log("sendo chamado else");
         }
         // aplica no input total
         $("#id-total" + numClearId).val(valTotalProd);
@@ -178,18 +169,50 @@ $(document).ready(function () {
         var valPorcen = $("#id-porcen" + numClearId).val();
 
         // se for nulo ou  NaN
-        if (isNaN(valPorcen) || (valPorcen = "")) {
-            // valor total sem lucro
-            var valTotalProd = valQuant * valCustoUnit;
-        } else {
-            //lucro = (porcen*valor)/100
-            var l = ((valPorcen * valCustoUnit) / 100);
-            //juntar lucro com valor do produto lf=lucroFinal
+        if (!isNaN(valPorcen) && (valPorcen != 0)) {
+            //lucro = (porcen*valor)/100  --liquido
+            var l = (valPorcen * valCustoUnit) / 100;
+            //juntar lucro + valor do produto lf=lucro bruto
             var lf = l + valCustoUnit;
             // valor em relação a quantidade
             var valTotalProd = lf * valQuant;
+        } else {
+            // valor total sem lucro
+            var valTotalProd = valQuant * valCustoUnit;
         }
+        // aplica no input total
+        $("#id-total" + numClearId).val(valTotalProd);
+        somaValorProdTotal();
+    });
 
+    // quando mudar o valor da porcentagem
+    $(document.body).on('keyup', '.porcen-prod-venda', function () {
+        //recebe valor do id do input
+        var numIdInput = $(this).attr("id");
+        // remove qualquer string deixando apenas o numero 
+        var numClearId = numIdInput.replace(/\D+/g, "");
+        // valor escrito em porcen
+        var valPorcen = Number($(this).val());
+        console.log("porcen->" + valPorcen);
+        // valor escrito em Quant
+        var valQuant = $("#id-quant" + numClearId).val();
+        console.log("valQuant--" + valQuant);
+        // valor escrito em custo
+        var valCustoUnit = $("#id-custo" + numClearId).val();
+        console.log("valCustoUnit--" + valCustoUnit);
+
+        // se for nulo ou  NaN
+        if (!isNaN(valPorcen) && (valPorcen != 0)) {
+            //lucro = (porcen*valor)/100  --liquido
+            var l = (valPorcen * valCustoUnit) / 100;
+            //juntar lucro + valor do produto lf=lucro bruto
+            var lf = l + valCustoUnit;
+            // valor em relação a quantidade
+            var valTotalProd = lf * valQuant;
+        } else {
+            // valor total sem lucro
+            var valTotalProd = valQuant * valCustoUnit;
+        }
         // aplica no input total
         $("#id-total" + numClearId).val(valTotalProd);
         somaValorProdTotal();
